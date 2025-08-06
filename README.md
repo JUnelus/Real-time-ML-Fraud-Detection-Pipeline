@@ -44,7 +44,7 @@ A complete **real-time fraud detection pipeline** that processes financial trans
 
 ### 1. Clone & Setup
 ```bash
-git clone https://github.com/yourusername/realtime-fraud-detection
+git clone https://github.com/JUnelus/Real-time-ML-Fraud-Detection-Pipeline
 cd realtime-fraud-detection
 pip install -r requirements.txt
 ```
