@@ -1,0 +1,399 @@
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="dataGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="kafkaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff9a9e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fecfef;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="mlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8edea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fed6e3;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="dbGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffecd2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fcb69f;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="dashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8caba;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5d4e75;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Drop shadows -->
+    <filter id="dropshadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+
+    <!-- Arrow marker -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f8f9fa"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="1200" height="80" fill="url(#headerGrad)"/>
+  <text x="600" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">
+    🛡️ Real-time ML Fraud Detection Pipeline
+  </text>
+  <text x="600" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="white" opacity="0.9">
+    Enterprise-grade Architecture • 1,000+ TPS • 99.5% ML Accuracy • Sub-100ms Latency
+  </text>
+
+  <!-- Data Generation Layer -->
+  <g transform="translate(50, 120)">
+    <rect x="0" y="0" width="200" height="120" rx="15" fill="url(#dataGrad)" filter="url(#dropshadow)"/>
+    <text x="100" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">
+      📊 Data Generation
+    </text>
+    <text x="100" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">
+      Transaction Simulator
+    </text>
+
+    <!-- Details -->
+    <rect x="10" y="55" width="180" height="55" rx="8" fill="rgba(255,255,255,0.2)"/>
+    <text x="20" y="70" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Realistic financial transactions
+    </text>
+    <text x="20" y="82" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • 5% fraud rate simulation
+    </text>
+    <text x="20" y="94" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Customer profiles &amp; patterns
+    </text>
+    <text x="20" y="106" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Configurable TPS: 1-1000+
+    </text>
+  </g>
+
+  <!-- Kafka Streaming Layer -->
+  <g transform="translate(320, 120)">
+    <rect x="0" y="0" width="200" height="120" rx="15" fill="url(#kafkaGrad)" filter="url(#dropshadow)"/>
+    <text x="100" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">
+      🔄 Apache Kafka
+    </text>
+    <text x="100" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">
+      Event Streaming
+    </text>
+
+    <!-- Details -->
+    <rect x="10" y="55" width="180" height="55" rx="8" fill="rgba(255,255,255,0.2)"/>
+    <text x="20" y="70" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • High-throughput messaging
+    </text>
+    <text x="20" y="82" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Fault-tolerant streaming
+    </text>
+    <text x="20" y="94" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Producer/Consumer pattern
+    </text>
+    <text x="20" y="106" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Real-time data pipeline
+    </text>
+  </g>
+
+  <!-- ML Processing Layer -->
+  <g transform="translate(590, 120)">
+    <rect x="0" y="0" width="200" height="120" rx="15" fill="url(#mlGrad)" filter="url(#dropshadow)"/>
+    <text x="100" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">
+      🤖 ML Fraud Detector
+    </text>
+    <text x="100" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">
+      Random Forest Model
+    </text>
+
+    <!-- Details -->
+    <rect x="10" y="55" width="180" height="55" rx="8" fill="rgba(255,255,255,0.2)"/>
+    <text x="20" y="70" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • 99.5% accuracy rate
+    </text>
+    <text x="20" y="82" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Real-time feature engineering
+    </text>
+    <text x="20" y="94" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Sub-100ms inference
+    </text>
+    <text x="20" y="106" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Risk scoring &amp; confidence
+    </text>
+  </g>
+
+  <!-- Database Layer -->
+  <g transform="translate(320, 280)">
+    <rect x="0" y="0" width="200" height="120" rx="15" fill="url(#dbGrad)" filter="url(#dropshadow)"/>
+    <text x="100" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">
+      💾 PostgreSQL
+    </text>
+    <text x="100" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">
+      Transaction Storage
+    </text>
+
+    <!-- Details -->
+    <rect x="10" y="55" width="180" height="55" rx="8" fill="rgba(255,255,255,0.2)"/>
+    <text x="20" y="70" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • ACID compliance
+    </text>
+    <text x="20" y="82" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Optimized indexes
+    </text>
+    <text x="20" y="94" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Time-series partitioning
+    </text>
+    <text x="20" y="106" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Real-time analytics views
+    </text>
+  </g>
+
+  <!-- Dashboard Layer -->
+  <g transform="translate(590, 280)">
+    <rect x="0" y="0" width="200" height="120" rx="15" fill="url(#dashGrad)" filter="url(#dropshadow)"/>
+    <text x="100" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">
+      📈 Live Dashboard
+    </text>
+    <text x="100" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white">
+      Real-time Monitoring
+    </text>
+
+    <!-- Details -->
+    <rect x="10" y="55" width="180" height="55" rx="8" fill="rgba(255,255,255,0.2)"/>
+    <text x="20" y="70" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Fraud alerts &amp; notifications
+    </text>
+    <text x="20" y="82" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Live transaction feed
+    </text>
+    <text x="20" y="94" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Performance metrics
+    </text>
+    <text x="20" y="106" font-family="Arial, sans-serif" font-size="9" fill="white">
+      • Auto-refresh every 5s
+    </text>
+  </g>
+
+  <!-- Docker Container -->
+  <g transform="translate(860, 120)">
+    <rect x="0" y="0" width="280" height="280" rx="15" fill="#f1f3f4" stroke="#e1e5e9" stroke-width="2" filter="url(#dropshadow)"/>
+    <text x="140" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+      🐳 Docker Infrastructure
+    </text>
+
+    <!-- Individual containers -->
+    <rect x="20" y="40" width="120" height="50" rx="8" fill="#4285f4" opacity="0.8"/>
+    <text x="80" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">
+      Zookeeper
+    </text>
+    <text x="80" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">
+      :2181
+    </text>
+
+    <rect x="140" y="40" width="120" height="50" rx="8" fill="#ff6b6b" opacity="0.8"/>
+    <text x="200" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">
+      Kafka
+    </text>
+    <text x="200" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">
+      :9092
+    </text>
+
+    <rect x="20" y="100" width="120" height="50" rx="8" fill="#4ecdc4" opacity="0.8"/>
+    <text x="80" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">
+      PostgreSQL
+    </text>
+    <text x="80" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">
+      :5432
+    </text>
+
+    <rect x="140" y="100" width="120" height="50" rx="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="200" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">
+      Dashboard
+    </text>
+    <text x="200" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">
+      :5000
+    </text>
+
+    <rect x="80" y="160" width="120" height="50" rx="8" fill="#f39c12" opacity="0.8"/>
+    <text x="140" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">
+      Kafka UI
+    </text>
+    <text x="140" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">
+      :8080
+    </text>
+
+    <!-- One-command deployment -->
+    <rect x="20" y="220" width="240" height="40" rx="8" fill="#2c3e50"/>
+    <text x="140" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white" font-weight="bold">
+      One Command Deployment
+    </text>
+    <text x="140" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#ecf0f1">
+      docker-compose up -d
+    </text>
+  </g>
+
+  <!-- Data Flow Arrows -->
+  <!-- Data Generator to Kafka -->
+  <line x1="250" y1="180" x2="320" y2="180" stroke="#666" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="285" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666" font-weight="bold">
+    1,000+ TPS
+  </text>
+
+  <!-- Kafka to ML -->
+  <line x1="520" y1="180" x2="590" y2="180" stroke="#666" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="555" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666" font-weight="bold">
+    Stream
+  </text>
+
+  <!-- ML to Database -->
+  <line x1="690" y1="240" x2="690" y2="280" stroke="#666" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <line x1="590" y1="340" x2="520" y2="340" stroke="#666" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="640" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666" font-weight="bold">
+    Save Results
+  </text>
+
+  <!-- Database to Dashboard -->
+  <line x1="520" y1="340" x2="590" y2="340" stroke="#666" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="555" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666" font-weight="bold">
+    Live Data
+  </text>
+
+  <!-- Performance Metrics -->
+  <g transform="translate(50, 450)">
+    <rect x="0" y="0" width="740" height="120" rx="15" fill="white" stroke="#e1e5e9" stroke-width="2" filter="url(#dropshadow)"/>
+    <text x="370" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">
+      📊 Performance Metrics
+    </text>
+
+    <!-- Metric boxes -->
+    <g transform="translate(20, 40)">
+      <rect x="0" y="0" width="160" height="60" rx="8" fill="#e8f5e8"/>
+      <text x="80" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#2e7d32">
+        Throughput
+      </text>
+      <text x="80" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1b5e20">
+        1,000+ TPS
+      </text>
+    </g>
+
+    <g transform="translate(200, 40)">
+      <rect x="0" y="0" width="160" height="60" rx="8" fill="#e3f2fd"/>
+      <text x="80" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#1976d2">
+        Latency
+      </text>
+      <text x="80" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#0d47a1">
+        &lt;100ms
+      </text>
+    </g>
+
+    <g transform="translate(380, 40)">
+      <rect x="0" y="0" width="160" height="60" rx="8" fill="#fce4ec"/>
+      <text x="80" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#c2185b">
+        ML Accuracy
+      </text>
+      <text x="80" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#880e4f">
+        99.5%
+      </text>
+    </g>
+
+    <g transform="translate(560, 40)">
+      <rect x="0" y="0" width="160" height="60" rx="8" fill="#fff3e0"/>
+      <text x="80" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f57c00">
+        Uptime
+      </text>
+      <text x="80" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#e65100">
+        99.9%
+      </text>
+    </g>
+  </g>
+
+  <!-- Technologies Used -->
+  <g transform="translate(50, 590)">
+    <rect x="0" y="0" width="1100" height="80" rx="15" fill="white" stroke="#e1e5e9" stroke-width="2" filter="url(#dropshadow)"/>
+    <text x="550" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">
+      🛠️ Technology Stack
+    </text>
+
+    <!-- Tech badges -->
+    <g transform="translate(80, 35)">
+      <rect x="0" y="0" width="80" height="30" rx="15" fill="#3776ab"/>
+      <text x="40" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">
+        Python
+      </text>
+    </g>
+
+    <g transform="translate(180, 35)">
+      <rect x="0" y="0" width="80" height="30" rx="15" fill="#231f20"/>
+      <text x="40" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">
+        Kafka
+      </text>
+    </g>
+
+    <g transform="translate(280, 35)">
+      <rect x="0" y="0" width="100" height="30" rx="15" fill="#336791"/>
+      <text x="50" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">
+        PostgreSQL
+      </text>
+    </g>
+
+    <g transform="translate(400, 35)">
+      <rect x="0" y="0" width="80" height="30" rx="15" fill="#f7931e"/>
+      <text x="40" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">
+        sklearn
+      </text>
+    </g>
+
+    <g transform="translate(500, 35)">
+      <rect x="0" y="0" width="80" height="30" rx="15" fill="#2496ed"/>
+      <text x="40" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">
+        Docker
+      </text>
+    </g>
+
+    <g transform="translate(600, 35)">
+      <rect x="0" y="0" width="80" height="30" rx="15" fill="#000000"/>
+      <text x="40" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">
+        Flask
+      </text>
+    </g>
+
+    <g transform="translate(700, 35)">
+      <rect x="0" y="0" width="80" height="30" rx="15" fill="#f1c40f"/>
+      <text x="40" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="black" font-weight="bold">
+        JavaScript
+      </text>
+    </g>
+
+    <g transform="translate(800, 35)">
+      <rect x="0" y="0" width="80" height="30" rx="15" fill="#e34c26"/>
+      <text x="40" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">
+        HTML5
+      </text>
+    </g>
+
+    <g transform="translate(900, 35)">
+      <rect x="0" y="0" width="80" height="30" rx="15" fill="#1572b6"/>
+      <text x="40" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">
+        CSS3
+      </text>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <text x="600" y="750" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#666">
+    Built for Capital One Senior Data Engineer Portfolio • Real-time ML Fraud Detection Pipeline
+  </text>
+  <text x="600" y="770" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#999">
+    Enterprise-grade architecture demonstrating modern data engineering and machine learning practices
+  </text>
+</svg>

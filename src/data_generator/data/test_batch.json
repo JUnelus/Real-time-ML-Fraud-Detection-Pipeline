@@ -1,0 +1,182 @@
+[
+  {
+    "transaction_id": "TXN_1754016992154177",
+    "customer_id": "CUST_7598",
+    "amount": 132.89,
+    "merchant": "CVS",
+    "location": "New York, NY",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154913",
+    "customer_id": "CUST_4813",
+    "amount": 124.77,
+    "merchant": "Walmart",
+    "location": "New York, NY",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154625",
+    "customer_id": "CUST_3196",
+    "amount": 184.49,
+    "merchant": "CVS",
+    "location": "Houston, TX",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154307",
+    "customer_id": "CUST_9687",
+    "amount": 176.59,
+    "merchant": "Starbucks",
+    "location": "Seattle, WA",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154126",
+    "customer_id": "CUST_9063",
+    "amount": 1652.33,
+    "merchant": "Luxury Electronics Store",
+    "location": "Chicago, IL",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "TXN_1754016992154782",
+    "customer_id": "CUST_2321",
+    "amount": 19.59,
+    "merchant": "McDonald's",
+    "location": "Chicago, IL",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154831",
+    "customer_id": "CUST_2875",
+    "amount": 100.64,
+    "merchant": "Target",
+    "location": "Seattle, WA",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154661",
+    "customer_id": "CUST_1154",
+    "amount": 147.6,
+    "merchant": "Starbucks",
+    "location": "New York, NY",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154776",
+    "customer_id": "CUST_1215",
+    "amount": 123.03,
+    "merchant": "Uber",
+    "location": "New York, NY",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154152",
+    "customer_id": "CUST_3196",
+    "amount": 106.78,
+    "merchant": "Home Depot",
+    "location": "New York, NY",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154543",
+    "customer_id": "CUST_3049",
+    "amount": 79.63,
+    "merchant": "Target",
+    "location": "Miami, FL",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154231",
+    "customer_id": "CUST_6911",
+    "amount": 132.51,
+    "merchant": "Walmart",
+    "location": "Miami, FL",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154834",
+    "customer_id": "CUST_6089",
+    "amount": 26.35,
+    "merchant": "McDonald's",
+    "location": "Miami, FL",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154177",
+    "customer_id": "CUST_8902",
+    "amount": 110.21,
+    "merchant": "Amazon",
+    "location": "Chicago, IL",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154614",
+    "customer_id": "CUST_9145",
+    "amount": 167.53,
+    "merchant": "Shell",
+    "location": "Los Angeles, CA",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154884",
+    "customer_id": "CUST_5449",
+    "amount": 33.44,
+    "merchant": "Shell",
+    "location": "New York, NY",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154203",
+    "customer_id": "CUST_3919",
+    "amount": 83.34,
+    "merchant": "Target",
+    "location": "Miami, FL",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154547",
+    "customer_id": "CUST_8503",
+    "amount": 68.83,
+    "merchant": "McDonald's",
+    "location": "Miami, FL",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "TXN_1754016992154561",
+    "customer_id": "CUST_7276",
+    "amount": 141.57,
+    "merchant": "Walmart",
+    "location": "International Location",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "TXN_1754016992154977",
+    "customer_id": "CUST_3742",
+    "amount": 73.57,
+    "merchant": "Costco",
+    "location": "Seattle, WA",
+    "timestamp": "2025-07-31T22:56:32.154642",
+    "is_fraud": false
+  }
+]
