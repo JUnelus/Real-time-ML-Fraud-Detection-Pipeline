@@ -13,26 +13,50 @@
 A complete **real-time fraud detection pipeline** that processes financial transactions at scale, detects fraudulent patterns using machine learning, and provides instant alerts through a live dashboard.
 
 ### **🔥 Key Features**
-- ⚡ **Real-time Processing**: 1,000+ transactions per second
-- 🤖 **ML Fraud Detection**: 99.5% accuracy with Random Forest
-- 📊 **Live Dashboard**: Real-time monitoring and alerts
-- 💾 **Persistent Storage**: PostgreSQL with optimized queries
-- 🔄 **Event Streaming**: Apache Kafka message queue
-- 🐳 **Containerized**: Full Docker deployment
-- 📈 **Production Ready**: Monitoring, logging, error handling
+- ⚡ **Real-time Processing**: Kafka-powered transaction streaming
+- 🤖 **ML Fraud Detection**: Random Forest scoring with explainable risk factors
+- 📊 **Operations Dashboard**: Live health, latency, DLQ, retries, and fraud alerts
+- 💾 **Persistent Storage**: PostgreSQL transaction store plus pipeline event audit log
+- 🧯 **Dead-letter Handling**: Malformed/poison messages are isolated for review
+- 🔁 **Reliability Patterns**: Bounded retries, duplicate-event handling, and failure telemetry
+- 🐳 **Containerized**: Docker-ready local deployment
+- 📈 **Employer-Ready Demo**: Stronger production engineering story, not just model training
+
+## 🆕 **Major Upgrade: Reliability + Observability Layer**
+
+This project was upgraded beyond a basic “Kafka + model + dashboard” demo into a more production-style streaming system:
+
+- **Centralized runtime config** in `config/settings.py`
+- **Typed event contracts** via `src/contracts.py`
+- **Explainable predictions** with `risk_level`, `risk_factors`, and `model_version`
+- **Dead-letter queue workflow** for invalid or failed events
+- **Pipeline audit events** stored in PostgreSQL for failures, retries, duplicates, and alerts
+- **Health/ops APIs** exposed by `dashboard.py`
+- **Automated tests** for validation, consumer behavior, and dashboard APIs
+
+These upgrades make the repo stand out more to employers because they show **production thinking**, not just model accuracy.
 
 ## 🏗️ **System Architecture**
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  Transaction    │───▶│  Apache Kafka   │───▶│  ML Fraud       │
-│  Generator      │    │  Streaming      │    │  Detector       │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-                                                        │
-┌─────────────────┐    ┌─────────────────┐             │
-│  Web Dashboard  │◀───│  PostgreSQL     │◀────────────┘
-│  (Live Alerts)  │    │  Database       │
-└─────────────────┘    └─────────────────┘
+┌─────────────────┐    ┌─────────────────┐    ┌──────────────────────────┐
+│  Transaction    │───▶│  Apache Kafka   │───▶│  Consumer + ML Scoring   │
+│  Generator      │    │  Streaming      │    │  Validation + Retries    │
+└─────────────────┘    └─────────────────┘    └──────────────┬───────────┘
+                                                              │
+                                                ┌─────────────▼─────────────┐
+                                                │  PostgreSQL               │
+                                                │  - transactions           │
+                                                │  - pipeline_events        │
+                                                └─────────────┬─────────────┘
+                                                              │
+                               ┌──────────────────────────────▼──────────────────────────────┐
+                               │ Dashboard APIs: stats, health, alerts, operations, config  │
+                               └──────────────────────────────┬──────────────────────────────┘
+                                                              │
+                                                ┌─────────────▼─────────────┐
+                                                │  Live Control Center UI   │
+                                                └───────────────────────────┘
 ```
 
 ## 🚀 **Quick Start**
@@ -51,12 +75,12 @@ pip install -r requirements.txt
 
 ### 2. Start Infrastructure
 ```bash
-docker-compose -f docker-compose-complete.yml up -d
+docker-compose -f docker-compose-with-db.yml up -d
 ```
 
 ### 3. Initialize Database
 ```bash
-python create_tables.py
+python src/database/create_tables.py
 ```
 
 ### 4. Run Pipeline
@@ -71,19 +95,31 @@ python src/streaming/kafka_producer.py
 python dashboard.py
 ```
 
+### 4B. Explore the upgraded APIs
+```bash
+# Health and readiness
+curl http://localhost:5000/api/health
+
+# Daily fraud + ops metrics
+curl http://localhost:5000/api/stats
+
+# Failures, retries, and dead-letter telemetry
+curl http://localhost:5000/api/operations
+```
+
 ### 5. View Results
 - **Live Dashboard**: http://localhost:5000
 - **Kafka UI**: http://localhost:8080
 
 ## 📊 **Performance Metrics**
 
-| Metric | Value |
-|--------|-------|
-| **Throughput** | 1,000+ TPS |
-| **Latency** | <100ms end-to-end |
-| **ML Accuracy** | 99.5% |
-| **Fraud Detection** | 95%+ recall |
-| **Database Saves** | 100% success rate |
+| Metric              | Value             |
+|---------------------|-------------------|
+| **Throughput**      | 1,000+ TPS        |
+| **Latency**         | <100ms end-to-end |
+| **ML Accuracy**     | 99.5%             |
+| **Fraud Detection** | 95%+ recall       |
+| **Database Saves**  | 100% success rate |
 
 ## 🤖 **Machine Learning Model**
 
@@ -180,7 +216,7 @@ realtime-fraud-detection/
 ### ✅ **Business Impact**
 - **Financial Domain**: Credit card fraud detection
 - **Cost Savings**: 40% reduction in manual review
-- **Customer Experience**: Sub-100ms transaction processing
+- **Customer Experience**: Sub-100 ms transaction processing
 - **Risk Management**: 95%+ fraud detection accuracy
 
 ## 🧪 **Testing & Validation**
@@ -189,6 +225,12 @@ realtime-fraud-detection/
 ```bash
 python -m pytest tests/ -v
 ```
+
+### What is covered now
+- Transaction schema validation
+- Fraud detector training and model persistence
+- Consumer retry / DLQ behavior
+- Dashboard health and operations APIs
 
 ### Performance Testing
 ```bash
@@ -228,18 +270,33 @@ kubectl apply -f k8s/
 ```
 
 ## 📊 **Monitoring & Observability**
-![dashboard_img.png](templates/dashboard_img.png)
+![img.png](templates/img.png)
 ### Key Metrics
 - **Throughput**: Transactions per second
 - **Latency**: End-to-end processing time  
 - **Accuracy**: ML model performance
 - **Error Rates**: System reliability
+- **DLQ Volume**: Invalid/failed event isolation
+- **Retry Count**: Transient failure recovery signal
+- **Duplicate Updates**: Idempotency / replay visibility
+- **System Health**: Healthy, degraded, or down
 
 ### Alerting
 - High-value fraud transactions ($1000+)
 - System performance degradation
 - Database connection failures
 - ML model drift detection
+
+## 🔌 **Dashboard API Surface**
+
+| Endpoint          | Purpose                                        |
+|-------------------|------------------------------------------------|
+| `/api/stats`      | Fraud metrics, latency, duplicates, DLQ counts |
+| `/api/recent`     | Latest scored transactions with risk factors   |
+| `/api/alerts`     | Recent fraud alerts for high-risk review       |
+| `/api/operations` | Failures, retries, latest pipeline events      |
+| `/api/health`     | Overall system health and component readiness  |
+| `/api/config`     | Effective runtime configuration                |
 
 ## 🔐 **Security Features**
 

@@ -1,135 +1,237 @@
-import os
-from flask import Flask, render_template, jsonify
-from src.database.db_handler import DatabaseHandler
-import json
+from __future__ import annotations
+
 from datetime import datetime
-from dotenv import load_dotenv
+from pathlib import Path
+from typing import Optional
 
-# Load environment variables
-load_dotenv()
+from flask import Flask, jsonify, render_template
 
-app = Flask(__name__)
-
-# Initialize database connection using environment variables
-db = DatabaseHandler()
+from config.settings import AppSettings, get_settings
+from src.database.db_handler import DatabaseHandler
 
 
-@app.route('/')
-def dashboard():
-    """Main dashboard page"""
-    return render_template('dashboard.html')
+def _serialize_transaction(tx: dict) -> dict:
+    return {
+        "transaction_id": tx["transaction_id"],
+        "amount": float(tx["amount"]),
+        "merchant": tx["merchant"],
+        "location": tx["location"],
+        "predicted_fraud": bool(tx["predicted_fraud"]),
+        "fraud_probability": float(tx["fraud_probability"] or 0),
+        "confidence": tx["confidence"],
+        "risk_level": tx.get("risk_level", "LOW"),
+        "risk_factors": list(tx.get("risk_factors") or []),
+        "pipeline_status": tx.get("pipeline_status", "processed"),
+        "retry_count": int(tx.get("retry_count") or 0),
+        "processing_latency_ms": int(tx.get("processing_latency_ms") or 0),
+        "timestamp": tx["processing_timestamp"].strftime("%H:%M:%S") if tx.get("processing_timestamp") else "Unknown",
+    }
 
 
-@app.route('/api/stats')
-def get_stats():
-    """API endpoint for fraud statistics"""
-    try:
-        if not db.connect():
-            return jsonify({'error': 'Database connection failed'}), 500
-
-        stats = db.get_fraud_stats()
-        db.close()
-
-        if not stats:
-            return jsonify({
-                'total_transactions': 0,
-                'fraud_detected': 0,
-                'fraud_rate': 0,
-                'avg_amount': 0,
-                'total_fraud_amount': 0
-            })
-
-        return jsonify({
-            'total_transactions': int(stats['total_transactions']),
-            'fraud_detected': int(stats['fraud_detected']),
-            'fraud_rate': float(stats['fraud_rate']),
-            'avg_amount': float(stats['avg_amount']),
-            'total_fraud_amount': float(stats['total_fraud_amount']) if stats['total_fraud_amount'] else 0,
-            'last_updated': datetime.now().strftime('%H:%M:%S')
-        })
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+def _serialize_event(event: dict) -> dict:
+    return {
+        "transaction_id": event.get("transaction_id") or "Unknown",
+        "event_type": event.get("event_type", "unknown"),
+        "status": event.get("status", "unknown"),
+        "stage": event.get("stage") or "pipeline",
+        "details": dict(event.get("details") or {}),
+        "created_at": event["created_at"].strftime("%H:%M:%S") if event.get("created_at") else "Unknown",
+    }
 
 
-@app.route('/api/recent')
-def get_recent_transactions():
-    """API endpoint for recent transactions"""
-    try:
-        if not db.connect():
-            return jsonify({'error': 'Database connection failed'}), 500
+def create_app(db_handler: Optional[DatabaseHandler] = None, settings: Optional[AppSettings] = None) -> Flask:
+    app = Flask(__name__)
+    app.config["SETTINGS"] = settings or get_settings()
+    app.config["DB_HANDLER"] = db_handler
 
-        transactions = db.get_recent_transactions(limit=10)
-        db.close()
+    def get_db() -> DatabaseHandler:
+        return app.config["DB_HANDLER"] or DatabaseHandler(settings=app.config["SETTINGS"])
 
-        # Format transactions for JSON
-        formatted_transactions = []
-        for tx in transactions:
-            formatted_transactions.append({
-                'transaction_id': tx['transaction_id'],
-                'amount': float(tx['amount']),
-                'merchant': tx['merchant'],
-                'location': tx['location'],
-                'predicted_fraud': tx['predicted_fraud'],
-                'fraud_probability': float(tx['fraud_probability']) if tx['fraud_probability'] else 0,
-                'confidence': tx['confidence'],
-                'timestamp': tx['processing_timestamp'].strftime('%H:%M:%S') if tx[
-                    'processing_timestamp'] else 'Unknown'
-            })
+    @app.route("/")
+    def dashboard():
+        return render_template("dashboard.html", refresh_seconds=app.config["SETTINGS"].pipeline.dashboard_refresh_seconds)
 
-        return jsonify(formatted_transactions)
+    @app.route("/api/stats")
+    def get_stats():
+        db = get_db()
+        try:
+            if not db.connect():
+                return jsonify({"error": "Database connection failed"}), 500
 
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+            stats = db.get_fraud_stats() or {}
+            return jsonify(
+                {
+                    "total_transactions": int(stats.get("total_transactions", 0)),
+                    "fraud_detected": int(stats.get("fraud_detected", 0)),
+                    "fraud_rate": float(stats.get("fraud_rate", 0)),
+                    "avg_amount": float(stats.get("avg_amount", 0)),
+                    "total_fraud_amount": float(stats.get("total_fraud_amount", 0) or 0),
+                    "avg_latency_ms": float(stats.get("avg_latency_ms", 0) or 0),
+                    "high_risk_alerts": int(stats.get("high_risk_alerts", 0) or 0),
+                    "dead_lettered_today": int(stats.get("dead_lettered_today", 0) or 0),
+                    "duplicate_events_today": int(stats.get("duplicate_events_today", 0) or 0),
+                    "errors_today": int(stats.get("errors_today", 0) or 0),
+                    "last_updated": datetime.now().strftime("%H:%M:%S"),
+                }
+            )
+        except Exception as exc:
+            return jsonify({"error": str(exc)}), 500
+        finally:
+            if app.config["DB_HANDLER"] is None:
+                db.close()
+
+    @app.route("/api/recent")
+    def get_recent_transactions():
+        db = get_db()
+        try:
+            if not db.connect():
+                return jsonify({"error": "Database connection failed"}), 500
+            transactions = db.get_recent_transactions(limit=10)
+            return jsonify([_serialize_transaction(tx) for tx in transactions])
+        except Exception as exc:
+            return jsonify({"error": str(exc)}), 500
+        finally:
+            if app.config["DB_HANDLER"] is None:
+                db.close()
+
+    @app.route("/api/alerts")
+    def get_alerts():
+        db = get_db()
+        try:
+            if not db.connect():
+                return jsonify({"error": "Database connection failed"}), 500
+            alerts = db.get_fraud_alerts(hours_back=24)
+            return jsonify(
+                [
+                    {
+                        "transaction_id": alert["transaction_id"],
+                        "amount": float(alert["amount"]),
+                        "merchant": alert["merchant"],
+                        "location": alert["location"],
+                        "fraud_probability": float(alert["fraud_probability"]),
+                        "risk_level": alert.get("risk_level", "HIGH"),
+                        "risk_factors": list(alert.get("risk_factors") or []),
+                        "minutes_ago": int(alert.get("minutes_ago") or 0),
+                    }
+                    for alert in alerts
+                ]
+            )
+        except Exception as exc:
+            return jsonify({"error": str(exc)}), 500
+        finally:
+            if app.config["DB_HANDLER"] is None:
+                db.close()
+
+    @app.route("/api/operations")
+    def get_operations():
+        db = get_db()
+        try:
+            if not db.connect():
+                return jsonify({"error": "Database connection failed"}), 500
+
+            metrics = db.get_operational_metrics()
+            failures = db.get_recent_pipeline_events(limit=8, status="error")
+            latest_events = db.get_recent_pipeline_events(limit=8)
+
+            return jsonify(
+                {
+                    "metrics": {
+                        "processed_last_hour": int(metrics.get("processed_last_hour", 0) or 0),
+                        "errors_last_hour": int(metrics.get("errors_last_hour", 0) or 0),
+                        "dead_letter_last_hour": int(metrics.get("dead_letter_last_hour", 0) or 0),
+                        "duplicates_last_hour": int(metrics.get("duplicates_last_hour", 0) or 0),
+                        "latest_processing_timestamp": (
+                            metrics.get("latest_processing_timestamp").isoformat()
+                            if metrics.get("latest_processing_timestamp")
+                            else None
+                        ),
+                    },
+                    "failures": [_serialize_event(event) for event in failures],
+                    "latest_events": [_serialize_event(event) for event in latest_events],
+                }
+            )
+        except Exception as exc:
+            return jsonify({"error": str(exc)}), 500
+        finally:
+            if app.config["DB_HANDLER"] is None:
+                db.close()
+
+    @app.route("/api/health")
+    def get_health():
+        db = get_db()
+        settings_obj = app.config["SETTINGS"]
+        model_path = Path(settings_obj.resolved_model_path)
+
+        try:
+            db_ok = db.connect()
+            metrics = db.get_operational_metrics() if db_ok else {}
+            model_available = model_path.exists()
+
+            latest_processing_timestamp = metrics.get("latest_processing_timestamp")
+            is_stale = True
+            if latest_processing_timestamp:
+                minutes_since_last_event = (datetime.now() - latest_processing_timestamp).total_seconds() / 60
+                is_stale = minutes_since_last_event > settings_obj.pipeline.stale_after_minutes
+
+            status = "healthy"
+            if not db_ok:
+                status = "down"
+            elif not model_available or is_stale or int(metrics.get("errors_last_hour", 0) or 0) > 0:
+                status = "degraded"
+
+            return jsonify(
+                {
+                    "status": status,
+                    "components": {
+                        "database": "up" if db_ok else "down",
+                        "model": "loaded" if model_available else "missing",
+                        "stream_activity": "active" if not is_stale else "stale",
+                    },
+                    "dead_letter_topic": settings_obj.kafka.dead_letter_topic,
+                    "transactions_topic": settings_obj.kafka.transactions_topic,
+                    "model_path": str(model_path),
+                    "latest_processing_timestamp": latest_processing_timestamp.isoformat() if latest_processing_timestamp else None,
+                }
+            )
+        except Exception as exc:
+            return jsonify({"status": "down", "error": str(exc)}), 500
+        finally:
+            if app.config["DB_HANDLER"] is None:
+                db.close()
+
+    @app.route("/api/config")
+    def get_config():
+        settings_obj = app.config["SETTINGS"]
+        return jsonify(
+            {
+                "database_host": settings_obj.database.host,
+                "database_name": settings_obj.database.name,
+                "database_user": settings_obj.database.user,
+                "kafka_servers": settings_obj.kafka.bootstrap_servers,
+                "transactions_topic": settings_obj.kafka.transactions_topic,
+                "dead_letter_topic": settings_obj.kafka.dead_letter_topic,
+                "flask_host": settings_obj.flask.host,
+                "flask_port": settings_obj.flask.port,
+                "model_path": str(settings_obj.resolved_model_path),
+            }
+        )
+
+    return app
 
 
-@app.route('/api/config')
-def get_config():
-    """API endpoint for configuration info (for debugging)"""
-    return jsonify({
-        'database_host': os.getenv('DATABASE_HOST', 'localhost'),
-        'database_name': os.getenv('DATABASE_NAME', 'fraud_detection'),
-        'database_user': os.getenv('DATABASE_USER', 'postgres'),
-        'kafka_servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092'),
-        'flask_host': os.getenv('FLASK_HOST', '0.0.0.0'),
-        'flask_port': os.getenv('FLASK_PORT', '5000'),
-        'model_path': os.getenv('MODEL_PATH', 'models/fraud_model.pkl')
-    })
+app = create_app()
 
 
-if __name__ == '__main__':
-    print("🌐 Starting Fraud Detection Dashboard with Environment Variables...")
-
-    # Show configuration
+if __name__ == "__main__":
+    settings = get_settings()
+    print("🌐 Starting Fraud Detection Dashboard with Reliability + Observability APIs...")
     print("\n🔧 Configuration:")
-    print(
-        f"   Database: {os.getenv('DATABASE_USER', 'postgres')}@{os.getenv('DATABASE_HOST', 'localhost')}:{os.getenv('DATABASE_PORT', '5432')}/{os.getenv('DATABASE_NAME', 'fraud_detection')}")
-    print(f"   Kafka: {os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')}")
-    print(f"   Flask: {os.getenv('FLASK_HOST', '0.0.0.0')}:{os.getenv('FLASK_PORT', '5000')}")
+    print(f"   Database: {settings.database.user}@{settings.database.host}:{settings.database.port}/{settings.database.name}")
+    print(f"   Kafka: {', '.join(settings.kafka.bootstrap_servers)}")
+    print(f"   Topics: {settings.kafka.transactions_topic} | DLQ: {settings.kafka.dead_letter_topic}")
+    print(f"   Flask: {settings.flask.host}:{settings.flask.port}")
+    print(f"\n📊 Dashboard will be available at: http://{settings.flask.host}:{settings.flask.port}")
+    print(f"🔄 Auto-refreshes every {settings.pipeline.dashboard_refresh_seconds} seconds")
+    print("⏹️  Press Ctrl+C to stop\n")
+    app.run(host=settings.flask.host, port=settings.flask.port, debug=settings.flask.debug)
 
-    # Get Flask configuration from environment
-    flask_host = os.getenv('FLASK_HOST', '0.0.0.0')
-    flask_port = int(os.getenv('FLASK_PORT', 5000))
-    flask_debug = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'
-
-    print(f"\n📊 Dashboard will be available at: http://{flask_host}:{flask_port}")
-    print("🔄 Auto-refreshes every 5 seconds")
-    print("⏹️  Press Ctrl+C to stop")
-
-    # Test database connection on startup
-    print("\n🔗 Testing database connection...")
-    test_db = DatabaseHandler()
-    if test_db.connect():
-        print("✅ Database connection successful")
-        test_db.close()
-    else:
-        print("❌ Database connection failed - check your .env file")
-        print("💡 Dashboard will still start but may show connection errors")
-
-    print()
-
-    app.run(
-        host=flask_host,
-        port=flask_port,
-        debug=flask_debug
-    )
